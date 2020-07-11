@@ -1,11 +1,10 @@
 import json
 from sklearn.model_selection import train_test_split
-import tensorflow.keras as keras
 import numpy as np
-
+import tensorflow.keras as keras
 
 JSON_PATH = "digit_dataset/data.json"
-MODEL_PATH = "models/model2.h5"
+MODEL_PATH = "models/asus_model2.h5"
 
 EPOCHS = 40
 BATCH_SIZE = 32

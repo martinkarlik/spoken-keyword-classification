@@ -3,8 +3,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow.keras as keras
 
-JSON_PATH = "digit_dataset/data.json"
-MODEL_PATH = "models/asus_model2.h5"
+JSON_PATH = "datasets/digit_dataset/data.json"
+MODEL_PATH = "models/model.h5"
 
 EPOCHS = 40
 BATCH_SIZE = 32
@@ -58,7 +58,7 @@ def build_model(input_shape):
     model.add(keras.layers.Flatten())
     model.add(keras.layers.Dense(units=64, activation="relu"))
     model.add(keras.layers.Dropout(0.3))
-    model.add(keras.layers.Dense(units=8))
+    model.add(keras.layers.Dense(units=8, activation="softmax"))
 
     optimizer = keras.optimizers.Adam(learning_rate=LEARNING_RATE)
     model.compile(optimizer=optimizer, loss="sparse_categorical_crossentropy", metrics=["accuracy"])
@@ -75,6 +75,7 @@ if __name__ == "__main__":
     model = build_model((X_train.shape[1], X_train.shape[2], X_train.shape[3]))
 
     early_stopping_callback = keras.callbacks.EarlyStopping(monitor="accuracy", min_delta=0.001, patience=5)
+
     history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE,
               validation_data=(X_validation, y_validation), callbacks=[early_stopping_callback])
 
@@ -84,8 +85,4 @@ if __name__ == "__main__":
     print(f"Test accuracy is {test_accuracy}.")
 
     model.save(MODEL_PATH)
-
-
-
-
 

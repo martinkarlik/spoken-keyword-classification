@@ -3,7 +3,7 @@ import numpy as np
 import librosa
 import sounddevice as sd
 
-MODEL_PATH = "models/model.h5"
+MODEL_PATH = "models/asus_model.h5"
 
 SAMPLES_TO_CONSIDER = 22050
 
@@ -32,8 +32,10 @@ class _DigitSpottingService:
         else:
             signal_to_consider = signal[:SAMPLES_TO_CONSIDER]
 
-        mfcc = librosa.feature.mfcc(signal_to_consider, sr, n_mfcc=13, n_fft=2048, hop_length=512)
+        mfcc = librosa.feature.mfcc(signal_to_consider, sr, n_mfcc=13, n_fft=2048, hop_length=512).T
         mfcc = mfcc[np.newaxis, ..., np.newaxis]
+
+        print(mfcc.shape)
 
         predictions = self.model.predict(mfcc)
         print(predictions)
@@ -55,22 +57,22 @@ if __name__ == "__main__":
 
     dss = DigitSpottingService()
 
-    # signal, sr = librosa.load("digit_dataset/7/0ab3b47d_nohash_0.wav")
+    signal, sr = librosa.load("datasets/digit_dataset/7/0ab3b47d_nohash_0.wav")
 
-    sd.default.channels = 1
-    sd.default.samplerate = 22050
-    print("Recording...")
-    signal = sd.rec(22050)
-    sd.wait()
-    print("Stopped")
-
-    print("Playing...")
-    sd.play(signal)
-    sd.wait()
-    print("Stopped")
-
-    signal = signal[:, 0]
-    sr = 22050
+    # sd.default.channels = 1
+    # sd.default.samplerate = 22050
+    # print("Recording...")
+    # signal = sd.rec(22050)
+    # sd.wait()
+    # print("Stopped")
+    #
+    # print("Playing...")
+    # sd.play(signal)
+    # sd.wait()
+    # print("Stopped")
+    #
+    # signal = signal[:, 0]
+    # sr = 22050
     digit = dss.predict(signal, sr)
 
     print(f"I think that that is {digit}.")

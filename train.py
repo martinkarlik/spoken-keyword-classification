@@ -2,6 +2,7 @@ import json
 from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow.keras as keras
+import tensorflow as tf
 
 JSON_PATH = "datasets/digit_dataset/data.json"
 MODEL_PATH = "models/model.h5"
@@ -85,4 +86,6 @@ if __name__ == "__main__":
     print(f"Test accuracy is {test_accuracy}.")
 
     model.save(MODEL_PATH)
+
+
 

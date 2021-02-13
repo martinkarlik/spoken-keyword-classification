@@ -49,36 +49,6 @@ class SifSplittingService:
 
         return sifs
 
-    # def split(self):
-
-    #
-    #     self.sif_starts = []
-    #
-    #     possible_sif_start = [-1, 0]
-    #
-    #     tolerable_streak_len = 5
-    #
-    #     for i in range(0, len(self.signal) // self.step):
-    #
-    #         if self.signal[i * self.step]**2 > self.threshold:
-    #
-    #             if possible_sif_start[0] == -1:
-    #                 possible_sif_start[0] = i
-    #             else:
-    #                 possible_sif_start[1] += 1
-    #
-    #             if possible_sif_start[1] == tolerable_streak_len:
-    #                 self.sif_starts.append(possible_sif_start[1] * self.step)
-    #
-    #         else:
-    #             possible_sif_start = [-1, 0]
-    #
-    #     sifs = []
-    #
-    #     for i in self.sif_starts:
-    #         sifs.append(signal[i:i+self.sample_rate // 2 if i+self.sample_rate // 2 < len(signal) else len(signal) - 1])
-    #
-    #     return sifs
 
     def visualize(self):
 

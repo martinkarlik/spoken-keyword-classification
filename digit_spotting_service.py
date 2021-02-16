@@ -59,20 +59,4 @@ if __name__ == "__main__":
 
     # signal, sr = librosa.load("datasets/digit_dataset/7/0ab3b47d_nohash_0.wav")
 
-    sd.default.channels = 1
-    sd.default.samplerate = 22050
-    print("Recording...")
-    signal = sd.rec(22050)
-    sd.wait()
-    print("Stopped")
 
-    print("Playing...")
-    sd.play(signal)
-    sd.wait()
-    print("Stopped")
-
-    signal = signal[:, 0]
-    sr = 22050
-    digit = dss.predict(signal, sr)
-
-    print(f"I think that that is {digit}.")

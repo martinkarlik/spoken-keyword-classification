@@ -39,12 +39,10 @@ class SifSplittingService:
         sifs = []
 
         for i in self.sif_starts:
-            if i + self.sample_rate > len(signal):
-                print("This should never happen.")
-                sif = signal[i:len(signal)]
+            if i + self.sample_rate > len(self.signal):
+                sif = self.signal[i:len(self.signal)]
             else:
-                sif = signal[i:i+self.sample_rate]
-                print("Should be 22050: {}".format(len(sif)))
+                sif = self.signal[i:i+self.sample_rate]
 
             sifs.append(sif)
 

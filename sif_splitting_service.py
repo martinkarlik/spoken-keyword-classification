@@ -1,6 +1,7 @@
 import sounddevice as sd
 import matplotlib.pyplot as plt
 import numpy as np
+import librosa
 
 
 class SifSplittingService:
@@ -49,37 +50,6 @@ class SifSplittingService:
 
         return sifs
 
-    # def split(self):
-
-    #
-    #     self.sif_starts = []
-    #
-    #     possible_sif_start = [-1, 0]
-    #
-    #     tolerable_streak_len = 5
-    #
-    #     for i in range(0, len(self.signal) // self.step):
-    #
-    #         if self.signal[i * self.step]**2 > self.threshold:
-    #
-    #             if possible_sif_start[0] == -1:
-    #                 possible_sif_start[0] = i
-    #             else:
-    #                 possible_sif_start[1] += 1
-    #
-    #             if possible_sif_start[1] == tolerable_streak_len:
-    #                 self.sif_starts.append(possible_sif_start[1] * self.step)
-    #
-    #         else:
-    #             possible_sif_start = [-1, 0]
-    #
-    #     sifs = []
-    #
-    #     for i in self.sif_starts:
-    #         sifs.append(signal[i:i+self.sample_rate // 2 if i+self.sample_rate // 2 < len(signal) else len(signal) - 1])
-    #
-    #     return sifs
-
     def visualize(self):
 
         plt.plot(self.signal ** 2, label='signal')
@@ -98,26 +68,28 @@ if __name__ == "__main__":
     sd.default.channels = 1
     sd.default.samplerate = 22050
 
-    print("Recording...")
-    signal = sd.rec(22050 * 10)
-    sd.wait()
-    print("Stopped")
+    # print("Recording...")
+    # signal = sd.rec(22050 * 10)
+    # sd.wait()
+    # print("Stopped")
 
     # print("Playing...")
     # sd.play(signal)
     # sd.wait()
     # print("Stopped")
 
-    signal = signal[:, 0]
-    sr = 22050
+    # signal = signal[:, 0]
+    # sr = 22050
+
+    signal, sr = librosa.load("datasets/digit_dataset/7/0ab3b47d_nohash_0.wav")
 
     sss = SifSplittingService(signal, sr)
 
-    sifs = sss.split()
+    # sifs = sss.split()
     sss.visualize()
 
-    print("This many sifs: {}".format(len(sifs)))
-
-    for sif in sifs:
-        sd.play(sif)
-        sd.wait()
+    # print("This many sifs: {}".format(len(sifs)))
+    #
+    # for sif in sifs:
+    #     sd.play(sif)
+    #     sd.wait()

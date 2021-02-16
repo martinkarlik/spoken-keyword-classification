@@ -35,27 +35,12 @@ class RecordingThread(AudioIOThread):
         self.rec_stream.stop()
         self.rec_data = np.array(self.rec_data)
 
-    def get_data(self):
-        return self.rec_data
+    def get_signal(self):
+        return np.array(self.rec_data)
+
+    def get_signal_power(self):
+        return np.power(np.array(self.rec_data), 2)
 
     def set_data(self, rec_data):
         self.rec_data = rec_data
-
-
-class PlaybackThread(AudioIOThread):
-
-    def __init__(self):
-        super().__init__()
-
-
-class DynamicPlaybackThread(PlaybackThread):
-
-    def __init__(self):
-        super().__init__()
-
-        self.play_stream = sd.OutputStream(samplerate=self.sampling_freq, channels=2, blocksize=self.chunk_samples,
-                                           callback=None)
-
-    def run(self):
-        self.play_stream.start()
 

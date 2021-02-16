@@ -50,10 +50,6 @@ class SifSplittingService:
 
         return sifs
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 3b6b62c4a3d828819d07ba3129960c46b9de001e
     def visualize(self):
 
         plt.plot(self.signal ** 2, label='signal')
@@ -84,6 +80,8 @@ if __name__ == "__main__":
 
     signal = signal[:, 0]
     sr = 22050
+
+    # signal, sr = librosa.load("datasets/digit_dataset/3/0c40e715_nohash_1.wav")
 
     sss = SifSplittingService(signal, sr)
 

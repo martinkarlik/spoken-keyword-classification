@@ -50,6 +50,10 @@ class SifSplittingService:
 
         return sifs
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3b6b62c4a3d828819d07ba3129960c46b9de001e
     def visualize(self):
 
         plt.plot(self.signal ** 2, label='signal')
@@ -68,28 +72,26 @@ if __name__ == "__main__":
     sd.default.channels = 1
     sd.default.samplerate = 22050
 
-    # print("Recording...")
-    # signal = sd.rec(22050 * 10)
-    # sd.wait()
-    # print("Stopped")
+    print("Recording...")
+    signal = sd.rec(22050 * 10)
+    sd.wait()
+    print("Stopped")
 
     # print("Playing...")
     # sd.play(signal)
     # sd.wait()
     # print("Stopped")
 
-    # signal = signal[:, 0]
-    # sr = 22050
-
-    signal, sr = librosa.load("datasets/digit_dataset/7/0ab3b47d_nohash_0.wav")
+    signal = signal[:, 0]
+    sr = 22050
 
     sss = SifSplittingService(signal, sr)
 
-    # sifs = sss.split()
+    sifs = sss.split()
     sss.visualize()
 
-    # print("This many sifs: {}".format(len(sifs)))
-    #
-    # for sif in sifs:
-    #     sd.play(sif)
-    #     sd.wait()
+    print("This many sifs: {}".format(len(sifs)))
+
+    for sif in sifs:
+        sd.play(sif)
+        sd.wait()

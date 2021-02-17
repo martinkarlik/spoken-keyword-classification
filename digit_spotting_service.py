@@ -1,7 +1,6 @@
 import tensorflow.keras as keras
 import numpy as np
 import librosa
-import sounddevice as sd
 
 MODEL_PATH = "models/model.h5"
 
@@ -52,11 +51,5 @@ def DigitSpottingService():
 
     return _DigitSpottingService.instance
 
-
-if __name__ == "__main__":
-
-    dss = DigitSpottingService()
-
-    # signal, sr = librosa.load("datasets/digit_dataset/7/0ab3b47d_nohash_0.wav")
 
 

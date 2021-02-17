@@ -1,4 +1,4 @@
-import sounddevice as sd
+# import sounddevice as sd
 import matplotlib.pyplot as plt
 import numpy as np
 import librosa
@@ -54,40 +54,8 @@ class SifSplittingService:
 
         for i in self.sif_starts:
             plt.axvline(x=i, color='y')
-            plt.axvline(x=i+self.sample_rate, color='g')
 
         plt.axhline(y=self.threshold, color='r')
 
         plt.show()
 
-
-if __name__ == "__main__":
-
-    sd.default.channels = 1
-    sd.default.samplerate = 22050
-
-    print("Recording...")
-    signal = sd.rec(22050 * 10)
-    sd.wait()
-    print("Stopped")
-
-    # print("Playing...")
-    # sd.play(signal)
-    # sd.wait()
-    # print("Stopped")
-
-    signal = signal[:, 0]
-    sr = 22050
-
-    # signal, sr = librosa.load("datasets/digit_dataset/3/0c40e715_nohash_1.wav")
-
-    sss = SifSplittingService(signal, sr)
-
-    sifs = sss.split()
-    sss.visualize()
-
-    print("This many sifs: {}".format(len(sifs)))
-
-    for sif in sifs:
-        sd.play(sif)
-        sd.wait()

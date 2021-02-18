@@ -1,17 +1,18 @@
 import sounddevice as sd
-import matplotlib.pyplot as plt
-import numpy as np
-import librosa
 from digit_spotting_service import *
 from sif_splitting_service import *
 
+SAMPLE_RATE = 22050
+
+
 if __name__ == "__main__":
 
+
     sd.default.channels = 1
-    sd.default.samplerate = 22050
+    sd.default.samplerate = SAMPLE_RATE
 
     print("Recording...")
-    signal = sd.rec(22050 * 10)
+    signal = sd.rec(SAMPLE_RATE * 5)
     sd.wait()
     print("Stopped")
 
@@ -20,12 +21,9 @@ if __name__ == "__main__":
     sd.wait()
     print("Stopped")
 
-    signal = signal[22050:, 0]
-    sr = 22050
+    signal = signal[SAMPLE_RATE:, 0]
 
-    # signal, sr = librosa.load("datasets/digit_dataset/3/0c40e715_nohash_1.wav")
-
-    sss = SifSplittingService(signal, sr)
+    sss = SifSplittingService(signal, SAMPLE_RATE)
     dss = DigitSpottingService()
 
     sifs = sss.split()
@@ -36,8 +34,8 @@ if __name__ == "__main__":
     for sif in sifs:
         sd.play(sif)
         sd.wait()
-        digit = dss.predict(sif, sr)
-        print("I think that the digit is {}.".format(digit))
+        digit = dss.predict(sif, SAMPLE_RATE)
+        # print("I think that the digit is {}.".format(digit))
 
 
 

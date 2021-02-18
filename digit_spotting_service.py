@@ -34,11 +34,11 @@ class _DigitSpottingService:
         mfcc = librosa.feature.mfcc(signal_to_consider, sr, n_mfcc=13, n_fft=2048, hop_length=512).T
         mfcc = mfcc[np.newaxis, ..., np.newaxis]
 
-        print(mfcc.shape)
 
         predictions = self.model.predict(mfcc)
-        print(predictions)
         prediction_index = np.argmax(predictions)
+
+        print("I think it's {} ({})".format(self._mappings[prediction_index], predictions[0, prediction_index]))
 
         return self._mappings[prediction_index]
 

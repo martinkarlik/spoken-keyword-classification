@@ -6,73 +6,71 @@ import librosa
 
 class SifSplittingService:
 
-    def __init__(self, signal, sample_rate):
-        self.signal = signal
-        self.signal_lr = np.zeros(len(self.signal))
+    def __init__(self, sample_rate):
 
         self.sample_rate = sample_rate
-        self.sif_starts = []
 
-        self.threshold = np.average(self.signal**2)
-        self.step = 1000
-        self.min_silence = 2000
 
-    def split(self):
+    def split(self, signal):
 
-        self.sif_borders = []
+        # signal_lr = np.zeros([len(signal)])
 
-        silence = 0
+        step = len(signal) // (self.sample_rate * 22)
+        min_silence_duration = step * 4
+        silence_threshold = np.average(signal ** 2)
+
+        sif_borders = []
+
         current_start = 0
-
         listening_for_new_sif = True
 
-        for i in range(0, len(self.signal), self.step):
+        for i in range(0, len(signal), step):
 
-            avg_signal_amplitude = np.average(self.signal[i:i + self.step] ** 2)
-            self.signal_lr[i:i + self.step] = avg_signal_amplitude
+            avg_signal_amplitude = np.average(signal[i:i + step] ** 2)
+            # signal_lr[i:i + step] = avg_signal_amplitude
 
-            if listening_for_new_sif and avg_signal_amplitude > self.threshold:
-                # self.sif_starts.append(i)
+            if listening_for_new_sif and avg_signal_amplitude > silence_threshold:
                 current_start = i
                 listening_for_new_sif = False
 
-            if not listening_for_new_sif and avg_signal_amplitude < self.threshold:
-                self.sif_borders.append([current_start, i])
+                if len(sif_borders) > 0 and current_start - sif_borders[len(sif_borders) - 1][1] <= min_silence_duration:
+                    current_start = sif_borders[len(sif_borders) - 1][0]
+                    sif_borders.pop(len(sif_borders) - 1)
+
+            if not listening_for_new_sif and avg_signal_amplitude < silence_threshold or i == len(signal) - step:
+
+                sif_borders.append([current_start, i])
                 listening_for_new_sif = True
 
         sifs = []
 
-        for i in range(len(self.sif_borders)):
+        for i in range(len(sif_borders)):
 
-            previous_sif_end = self.sif_borders[i - 1][1] + self.step if i > 0 else 0
-            future_sif_start = self.sif_borders[i + 1][0] - self.step if i < len(self.sif_borders) - 1 else len(self.signal)
+            previous_sif_end = sif_borders[i - 1][1] + step if i > 0 else 0
+            future_sif_start = sif_borders[i + 1][0] - step if i < len(sif_borders) - 1 else len(signal)
 
-            middle_point = (self.sif_borders[i][0] + self.sif_borders[i][1]) // 2
+            middle_point = (sif_borders[i][0] + sif_borders[i][1]) // 2
             start_index = max(previous_sif_end, middle_point - self.sample_rate // 2)
-
             end_index = min(future_sif_start, middle_point + self.sample_rate // 2)
 
             sif = np.zeros([self.sample_rate])
 
             sif[self.sample_rate // 2 - (middle_point - start_index):self.sample_rate // 2 + (end_index - middle_point)] = \
-                self.signal[start_index:end_index]
+                signal[start_index:end_index]
 
             print("Sif len: {}, Range: {} - {} - {}".format(len(sif), start_index, middle_point, end_index))
 
             sifs.append(sif)
 
+        return sifs, sif_borders
 
-        return sifs
+    def visualize(self, signal, sif_borders):
 
-    def visualize(self):
+        plt.plot(signal ** 2, label='signal')
 
-        plt.plot(self.signal ** 2, label='signal')
-
-        for i in self.sif_borders:
+        for i in sif_borders:
             plt.axvline(x=i[0], color='y')
             plt.axvline(x=i[1], color='g')
-
-        plt.axhline(y=self.threshold, color='r')
 
         plt.show()
 

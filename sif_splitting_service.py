@@ -15,7 +15,7 @@ class SifSplittingService:
 
         # signal_lr = np.zeros([len(signal)])
 
-        step = len(signal) // (self.sample_rate * 22)
+        step = self.sample_rate // 22
         min_silence_duration = step * 4
         silence_threshold = np.average(signal ** 2)
 

@@ -1,8 +1,12 @@
+from sif_splitting_service import *
 
 class RealTimeSifExtractor:
 
-    def __init__(self):
-        pass
+    def __init__(self, sample_rate):
+        self.sss = SifSplittingService(sample_rate)
 
-    def extractSifs(self, signal_power):
-        return []
+    def extractSifs(self, signal):
+
+        sifs = self.sss.split(signal)
+
+        return sifs

@@ -9,8 +9,29 @@ SAMPLE_RATE = 22050
 
 if __name__ == "__main__":
 
+    rtse = RealTimeSifExtractor(SAMPLE_RATE)
+    dss = DigitSpottingService()
 
-    # sd.default.channels = 1
+    recording_thread = RecordingThread()
+    recording_thread.start()
+
+    recording = True
+
+    while recording:
+        signal = recording_thread.get_signal()
+
+        if len(signal) > 0:
+
+            sifs = rtse.extractSifs(signal)
+
+            for sif in sifs:
+                digit = dss.predict(sif, SAMPLE_RATE)
+                print("I think that the digit is {}.".format(digit))
+
+
+
+
+# sd.default.channels = 1
     # sd.default.samplerate = SAMPLE_RATE
     #
     # print("Recording...")
@@ -38,21 +59,3 @@ if __name__ == "__main__":
     #     sd.wait()
     #     digit = dss.predict(sif, SAMPLE_RATE)
     #     # print("I think that the digit is {}.".format(digit))
-    #
-
-
-
-    recording_thread = RecordingThread()
-    recording_thread.start()
-    rtse = RealTimeSifExtractor()
-    sss = SifSplittingService(SAMPLE_RATE)
-
-
-    recording = True
-
-    while recording:
-        signal_power = recording_thread.get_signal_power()
-
-        if len(signal_power) > 0:
-
-            sifs = rtse.extractSifs(signal_power)

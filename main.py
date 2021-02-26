@@ -18,20 +18,18 @@ if __name__ == "__main__":
     recording = True
 
     while recording:
-        signal = recording_thread.get_signal()
-
-        if len(signal) > 0:
+        if recording_thread.session_index == recording_thread.session_len:
+            signal = recording_thread.retrieve_session()
 
             sifs = rtse.extractSifs(signal)
 
             for sif in sifs:
-                digit = dss.predict(sif, SAMPLE_RATE)
-                print("I think that the digit is {}.".format(digit))
+                digit, confidence = dss.predict(sif, SAMPLE_RATE)
+                if confidence > 0.95:
+                    print("I think that the digit is {}.".format(digit))
 
 
-
-
-# sd.default.channels = 1
+    # sd.default.channels = 1
     # sd.default.samplerate = SAMPLE_RATE
     #
     # print("Recording...")
@@ -46,11 +44,12 @@ if __name__ == "__main__":
     #
     # signal = signal[SAMPLE_RATE:, 0]
     #
-    # sss = SifSplittingService(signal, SAMPLE_RATE)
+    #
+    # sss = SifSplittingService(SAMPLE_RATE)
     # dss = DigitSpottingService()
     #
-    # sifs = sss.split()
-    # sss.visualize()
+    # sifs, sif_borders = sss.split(signal)
+    # sss.visualize(signal, sif_borders)
     #
     # print("This many sifs: {}".format(len(sifs)))
     #

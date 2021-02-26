@@ -17,17 +17,23 @@ class RecordingThread(AudioIOThread):
 
     def __init__(self):
         super().__init__()
-        self.rec_data = np.array([])
-        self.session_len = self.sampling_freq * 2
+
+        self.session_len = self.sampling_freq // 2
+        self.session_index = 0
+        self.rec_data = np.zeros([self.session_len])
 
         self.rec_stream = sd.InputStream(samplerate=self.sampling_freq, channels=1, blocksize=self.chunk_samples,
                                          callback=self.callback)
 
     def callback(self, indata, frames, time, status):
-        if self.rec_data.size == 0:
-            self.rec_data = indata
-        else:
-            self.rec_data = np.append(self.rec_data, indata, axis=0)[-self.session_len:]
+
+        self.rec_data[self.session_index:self.session_index + self.chunk_samples] = indata[:, 0]
+        self.session_index += self.chunk_samples
+
+        # if self.rec_data.size == 0:
+        #     self.rec_data = indata[:, 0]
+        # else:
+        #     self.rec_data = np.append(self.rec_data, indata, axis=0)[-self.session_len:]
 
     def run(self):
         self.rec_stream.start()
@@ -36,9 +42,9 @@ class RecordingThread(AudioIOThread):
         self.rec_stream.stop()
         self.rec_data = np.array(self.rec_data)
 
-    def get_signal(self):
-        print(self.rec_data.shape)
-        return np.array(self.rec_data)
+    def retrieve_session(self):
+        self.session_index = 0
+        return self.rec_data
 
     def get_signal_power(self):
         return np.power(np.array(self.rec_data), 2)

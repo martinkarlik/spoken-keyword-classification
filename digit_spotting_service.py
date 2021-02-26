@@ -38,9 +38,9 @@ class _DigitSpottingService:
         predictions = self.model.predict(mfcc)
         prediction_index = np.argmax(predictions)
 
-        print("I think it's {} ({})".format(self._mappings[prediction_index], predictions[0, prediction_index]))
+        # print("I think it's {} ({})".format(self._mappings[prediction_index], predictions[0, prediction_index]))
 
-        return self._mappings[prediction_index]
+        return self._mappings[prediction_index], predictions[0, prediction_index]
 
 
 def DigitSpottingService():

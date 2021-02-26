@@ -1,5 +1,6 @@
 from sif_splitting_service import *
 
+
 class RealTimeSifExtractor:
 
     def __init__(self, sample_rate):
@@ -7,6 +8,6 @@ class RealTimeSifExtractor:
 
     def extractSifs(self, signal):
 
-        sifs = self.sss.split(signal)
+        sifs, _ = self.sss.split(signal)
 
         return sifs

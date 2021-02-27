@@ -10,16 +10,7 @@ SAMPLES_TO_CONSIDER = 22050
 class _DigitSpottingService:
     model = None
 
-    _mappings = [
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight"
-    ]
+    _mappings = [i for i in range(1, 9)]
     instance = None
 
     def predict(self, signal, sr):

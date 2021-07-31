@@ -1,2 +1,2 @@
-# Introduction
-My spoken keyword predicting prototype.
+## Introduction
+This script detects and classifies spoken letters and digits. It is is a prototype for my other project MindChess.
